@@ -21,6 +21,7 @@ class SyncTenantPrivilege(SyncStep):
     provides = [TenantPrivilege]
     observes = TenantPrivilege
     requested_interval = 0
+    isolation = "vm"
 
     def fetch_pending(self, deleted):
         privs = super(SyncTenantPrivilege, self).fetch_pending(deleted)

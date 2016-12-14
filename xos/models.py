@@ -19,11 +19,11 @@ class OpenVPNService(Service):
     """The location of the vars file with information for using EASY RSA."""
     EASYRSA_LOC = OPENVPN_PREFIX + "easyrsa3/easyrsa"
     """The location of the EASY RSA binary."""
-    EASYRSA_COMMAND_PREFIX = EASYRSA_LOC + " --vars=" + VARS
+    EASYRSA_COMMAND_PREFIX = "/opt/xos/synchronizers/openvpn/easyrsa" + " --vars=" + VARS
     """Prefix for EASY RSA commands."""
 
     @classmethod
-    def execute_easyrsa_command(cls, pki_dir, command):
+    def execute_easyrsa_command(cls, pki_dir, command, stdin_content=''):
         """Executes the given EASY RSA command using the given PKI.
 
         Parameters:
@@ -31,7 +31,8 @@ class OpenVPNService(Service):
             command (str): The command to execute using ESAY RSA.
         """
         full_command = (
-            OpenVPNService.EASYRSA_COMMAND_PREFIX + " --pki-dir=" +
+            "echo {} | ".format(stdin_content) +
+            "sh " + OpenVPNService.EASYRSA_COMMAND_PREFIX + " --pki-dir=" +
             pki_dir + " " + command)
         proc = Popen(
             full_command, shell=True, stdout=PIPE, stderr=PIPE

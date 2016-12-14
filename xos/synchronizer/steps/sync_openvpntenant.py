@@ -23,6 +23,7 @@ class SyncOpenVPNTenant(SyncInstanceUsingAnsible):
     requested_interval = 0
     template_name = "sync_openvpntenant.yaml"
     service_key_name = "/opt/xos/synchronizers/openvpn/openvpn_private_key"
+    isolation = "vm"
 
     def fetch_pending(self, deleted):
         if (not deleted):
@@ -51,7 +52,7 @@ class SyncOpenVPNTenant(SyncInstanceUsingAnsible):
         if (not os.path.isdir(pki_dir)):
             OpenVPNService.execute_easyrsa_command(pki_dir, "init-pki")
             OpenVPNService.execute_easyrsa_command(
-                pki_dir, "--req-cn=XOS build-ca nopass")
+                pki_dir, "--req-cn=XOS build-ca nopass", stdin_content="openvpn")
 
         # Very hacky way to handle VPNs that need to share CAs
         if (o.use_ca_from_id):
